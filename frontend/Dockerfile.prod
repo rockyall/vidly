@@ -1,0 +1,16 @@
+# step 1: Bild stage
+FROM node:18-alpine AS build-stage
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+ENV NODE_OPTIONS=--openssl-legacy-provider
+RUN npm run build
+
+# Step 2: production
+FROM nginx:stable-alpine3.21-perl
+RUN addgroup app && adduser -S -G app app
+USER app
+COPY --from=build-stage /app/build /usr/share/nginx/html
+EXPOSE 80
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

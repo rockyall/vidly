@@ -1,0 +1,36 @@
+
+services:
+  web:
+    build: ./frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/app
+  web-test:
+    image: vidly-web
+    volumes:
+      - ./frontend:/app
+    command: /bin/sh -c 'npm test'
+  api:
+    build: ./backend
+    ports:
+      - 3001:3001
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    command: /bin/sh -c 'npm run db:up && npm start'
+  db:
+    image: mongo:4.0-xenial
+    healthcheck:
+      test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 27017:27017
+    volumes:
+      - vidly:/data/db
+volumes:
+  vidly:
