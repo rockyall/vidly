@@ -9,8 +9,6 @@ RUN npm run build
 
 # Step 2: production
 FROM nginx:stable-alpine3.21-perl
-RUN addgroup app && adduser -S -G app app
-USER app
 COPY --from=build-stage /app/build /usr/share/nginx/html
 EXPOSE 80
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
