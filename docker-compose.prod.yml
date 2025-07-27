@@ -14,7 +14,7 @@ services:
       dockerfile: Dockerfile.pro
     image: vidly_api:1
     ports:
-      - 80:3001
+      - 3001:3001
     restart: unless-stopped
     depends_on:
       db:
