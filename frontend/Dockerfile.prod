@@ -5,6 +5,7 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 ENV NODE_OPTIONS=--openssl-legacy-provider
+ENV REACT_APP_API_URL=http://67.205.158.92:3001/api
 RUN npm run build
 
 # Step 2: production
